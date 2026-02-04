@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 
 interface DetailsScreenProps {
@@ -99,7 +100,7 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ onNavigate }) => {
 
             <div className="flex flex-col items-center gap-4 p-6 border border-primary/10 rounded-xl bg-blush/10">
               <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/20 shadow-sm">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo3FLpzM9OI-Jz1V6GAgdLMA-AujD_AfL-tS_J10rxzGDEWT_lzV8i6h3ILPca3QuacyDi4popv3RUHaOT4gBwW7wS9fSe82RLSQ_uWEqvyvM9T0YPdwb3mY-ONSqC3jUY2ehjXbUVoBId2hxnddhbbNFl_W4m2w3VOZE6uqZuu74BnDjMHETCs6m2F1YDiaTqx1V5_Vkm9xlq6TKPsDGHQS5xaVn15HvUMoHwFpKD6nZMvW1CUlEct6H1wPgoxEfzOny8tqpheJ55" alt="Lily" className="w-full h-full object-cover" />
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCurX3ti77N2RFRAwlgz0-hmasp3hyLku_MWTMvF-oz7UbWn2HjPD3mXx6BpGw4_LhGSBZseb7uM0WxoHSLkHDi121hf1S9Ad7oaqyYdfvfLt8KZpb-fQsgkr_QD9_mPsdQOs9npp5t7wpoYgjipXCeIepPaf_c2BgoWweFRueO6BC857RgWOLh6GzC8YZhN5mJ7JldI2z2RPpDn5N-mFyhKyDlYD6gZzdxg3OJqNUrRASj9AsmGCmc0d4urf0AX1GX8_gbVRYlUQ8s" alt="Lily" className="w-full h-full object-cover" />
               </div>
               <div className="space-y-1">
                 <p className="text-[#1b190d] text-[10px] font-bold uppercase tracking-[0.3em]">Son of</p>

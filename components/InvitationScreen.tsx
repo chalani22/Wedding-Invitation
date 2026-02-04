@@ -1,50 +1,14 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { generateBlessing } from '../services/geminiService';
 
 interface InvitationScreenProps {
   onOpen: () => void;
 }
 
-const MUSIC_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3"; 
-
 const InvitationScreen: React.FC<InvitationScreenProps> = ({ onOpen }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
   const [blessing, setBlessing] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    const audio = new Audio(MUSIC_URL);
-    audio.loop = true;
-    audio.preload = "auto";
-    audioRef.current = audio;
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = "";
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (audio) {
-      if (isPlaying) {
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(err => {
-            console.error("Audio playback failed:", err);
-            setIsPlaying(false);
-          });
-        }
-      } else {
-        audio.pause();
-      }
-    }
-  }, [isPlaying]);
 
   const handleGenerateBlessing = async (theme: string) => {
     setIsGenerating(true);
@@ -82,17 +46,6 @@ const InvitationScreen: React.FC<InvitationScreenProps> = ({ onOpen }) => {
           </div>
           <h2 className="text-[#1b190d] dark:text-ivory text-xl font-bold tracking-widest uppercase">L & S</h2>
         </div>
-        <button 
-          onClick={() => setIsPlaying(!isPlaying)}
-          className="flex items-center gap-3 px-4 py-2 bg-ivory/80 dark:bg-background-dark/50 border border-primary/30 rounded-full shadow-sm hover:shadow-md transition-all"
-        >
-          <span className="material-symbols-outlined text-primary text-xl">
-            {isPlaying ? 'volume_up' : 'volume_off'}
-          </span>
-          <span className="text-sm font-medium text-[#9a8d4c] uppercase tracking-tighter">
-            {isPlaying ? 'Music Playing' : 'Tap to play music'}
-          </span>
-        </button>
       </header>
 
       {/* Main Hero */}

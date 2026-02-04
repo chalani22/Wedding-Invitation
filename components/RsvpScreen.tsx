@@ -2,22 +2,61 @@
 import React, { useState } from 'react';
 
 interface RsvpScreenProps {
-  onSubmit: () => void;
+  onSubmit: (data: any) => Promise<void>;
   onNavigate: (view: 'invitation' | 'details' | 'rsvp' | 'thank-you' | 'schedule' | 'location') => void;
 }
 
 const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
     attendance: 'yes',
-    guests: 1,
+    guests: 0,
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only allow digits and limit to 9 characters (Standard Sri Lankan format after +94)
+    const value = e.target.value.replace(/\D/g, ''); 
+    if (value.length <= 9) {
+      setFormData(prev => ({ ...prev, phone: value }));
+    }
+  };
+
+  const handleAttendanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setFormData(prev => ({ 
+      ...prev, 
+      attendance: value,
+      // If attending, default to at least 1 guest if currently 0. If declining, force 0.
+      guests: value === 'no' ? 0 : (prev.guests === 0 ? 1 : prev.guests)
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit();
+    
+    // Validation: Exactly 9 digits are required for a standard Sri Lankan mobile number after +94
+    if (formData.phone.length !== 9) {
+      alert("Please enter exactly 9 digits for your phone number after the +94 prefix.");
+      return;
+    }
+
+    // Validation: At least 1 guest if attending
+    if (formData.attendance === 'yes' && formData.guests === 0) {
+      alert("Please specify the number of guests attending (at least 1).");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await onSubmit(formData);
+    } catch (error) {
+      alert("Something went wrong. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const incrementGuests = () => {
@@ -27,10 +66,13 @@ const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
   };
 
   const decrementGuests = () => {
-    if (formData.guests > 1) {
+    if (formData.guests > 0) {
       setFormData(prev => ({ ...prev, guests: prev.guests - 1 }));
     }
   };
+
+  // Determine if the submit button should be visually disabled or show error state
+  const isSubmitDisabled = isSubmitting || (formData.attendance === 'yes' && formData.guests === 0);
 
   return (
     <div className="relative min-h-screen w-full flex flex-col bg-blush animate-fade-in overflow-x-hidden selection:bg-primary/20 items-center justify-center py-12 px-4">
@@ -66,6 +108,7 @@ const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
                 placeholder="John & Jane Doe" 
                 required 
                 type="text" 
+                disabled={isSubmitting}
                 value={formData.fullName} 
                 onChange={e => setFormData({...formData, fullName: e.target.value})} 
               />
@@ -73,14 +116,20 @@ const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
 
             <div className="space-y-3">
               <label className="block text-[10px] font-bold text-gold-muted uppercase tracking-[0.3em]">Phone Number</label>
-              <input 
-                className="w-full bg-transparent border-b border-primary/20 border-t-0 border-l-0 border-r-0 px-0 py-2 text-lg focus:ring-0 focus:border-primary transition-all placeholder:text-gray-300 font-display italic" 
-                placeholder="+94-XX-XXXXXXX" 
-                required 
-                type="tel" 
-                value={formData.phone} 
-                onChange={e => setFormData({...formData, phone: e.target.value})} 
-              />
+              <div className="flex items-center border-b border-primary/20 focus-within:border-primary transition-all">
+                <span className="text-lg font-display italic text-gold-muted pr-2 select-none">+94</span>
+                <input 
+                  className="flex-1 bg-transparent border-none px-0 py-2 text-lg focus:ring-0 placeholder:text-gray-300 font-display italic" 
+                  placeholder="7X XXXXXXX" 
+                  required 
+                  type="tel" 
+                  inputMode="numeric"
+                  disabled={isSubmitting}
+                  value={formData.phone} 
+                  onChange={handlePhoneChange} 
+                />
+              </div>
+              <p className="text-[9px] text-gold-muted/40 uppercase tracking-widest italic">Please enter the 9 digits following +94</p>
             </div>
 
             <div className="space-y-4 pt-2">
@@ -93,8 +142,9 @@ const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
                       name="attendance" 
                       type="radio" 
                       value="yes" 
+                      disabled={isSubmitting}
                       checked={formData.attendance === 'yes'} 
-                      onChange={e => setFormData({...formData, attendance: e.target.value})} 
+                      onChange={handleAttendanceChange} 
                     />
                     <div className="absolute size-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"></div>
                   </div>
@@ -107,8 +157,9 @@ const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
                       name="attendance" 
                       type="radio" 
                       value="no" 
+                      disabled={isSubmitting}
                       checked={formData.attendance === 'no'} 
-                      onChange={e => setFormData({...formData, attendance: e.target.value})} 
+                      onChange={handleAttendanceChange} 
                     />
                     <div className="absolute size-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"></div>
                   </div>
@@ -124,7 +175,8 @@ const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
                   <button 
                     type="button" 
                     onClick={decrementGuests}
-                    className="flex items-center justify-center size-10 rounded-full border border-primary/40 text-primary hover:bg-primary/10 transition-colors"
+                    disabled={isSubmitting || formData.guests === 0}
+                    className="flex items-center justify-center size-10 rounded-full border border-primary/40 text-primary hover:bg-primary/10 transition-colors disabled:opacity-30"
                   >
                     <span className="material-symbols-outlined text-xl">remove</span>
                   </button>
@@ -132,7 +184,8 @@ const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
                   <button 
                     type="button" 
                     onClick={incrementGuests}
-                    className="flex items-center justify-center size-10 rounded-full border border-primary/40 text-primary hover:bg-primary/10 transition-colors"
+                    disabled={isSubmitting || formData.guests >= 10}
+                    className="flex items-center justify-center size-10 rounded-full border border-primary/40 text-primary hover:bg-primary/10 transition-colors disabled:opacity-30"
                   >
                     <span className="material-symbols-outlined text-xl">add</span>
                   </button>
@@ -148,6 +201,7 @@ const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
                 className="w-full bg-transparent border-b border-primary/20 border-t-0 border-l-0 border-r-0 px-0 py-2 text-lg focus:ring-0 focus:border-primary transition-all placeholder:text-gray-300 resize-none font-display italic" 
                 placeholder="Your wishes or dietary notes..." 
                 rows={2} 
+                disabled={isSubmitting}
                 value={formData.message} 
                 onChange={e => setFormData({...formData, message: e.target.value})} 
               />
@@ -156,10 +210,25 @@ const RsvpScreen: React.FC<RsvpScreenProps> = ({ onSubmit, onNavigate }) => {
             <div className="pt-8">
               <button 
                 type="submit" 
-                className="w-full bg-primary text-[#1b190d] font-bold py-5 rounded-full text-[10px] uppercase tracking-[0.3em] shadow-lg shadow-primary/20 hover:bg-[#e0be10] hover:scale-[1.01] active:scale-[0.98] transition-all"
+                disabled={isSubmitDisabled}
+                className={`w-full font-bold py-5 rounded-full text-[10px] uppercase tracking-[0.3em] shadow-lg transition-all flex items-center justify-center gap-2 ${
+                  isSubmitDisabled && !isSubmitting 
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none' 
+                    : 'bg-primary text-[#1b190d] shadow-primary/20 hover:bg-[#e0be10] hover:scale-[1.01] active:scale-[0.98]'
+                }`}
               >
-                Confirm Attendance
+                {isSubmitting ? (
+                  <>
+                    <span className="material-symbols-outlined animate-spin text-lg">progress_activity</span>
+                    <span>Confirming...</span>
+                  </>
+                ) : (
+                  <span>Confirm Attendance</span>
+                )}
               </button>
+              {formData.attendance === 'yes' && formData.guests === 0 && !isSubmitting && (
+                <p className="text-center text-[9px] text-red-400 mt-2 uppercase tracking-widest font-bold">Please add at least 1 guest to confirm</p>
+              )}
             </div>
           </form>
           <p className="mt-8 text-center text-[10px] text-gold-muted italic tracking-[0.2em] uppercase font-bold">Please respond by March 01st, 2026</p>

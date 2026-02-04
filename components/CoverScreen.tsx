@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import WatercolorLily from './WatercolorLily';
 
@@ -25,10 +26,6 @@ const CoverScreen: React.FC<CoverScreenProps> = ({ onOpen }) => {
 
       <header className="absolute top-0 w-full flex justify-between px-10 py-8 opacity-60">
         <p className="text-[10px] font-bold tracking-[0.4em] uppercase">L & S Wedding</p>
-        <button className="flex items-center gap-2 text-primary">
-          <span className="material-symbols-outlined text-lg">volume_up</span>
-          <span className="text-[8px] font-bold uppercase tracking-widest">Tap to play music</span>
-        </button>
       </header>
 
       <div className="relative z-10 flex flex-col items-center">
