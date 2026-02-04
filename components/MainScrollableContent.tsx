@@ -105,7 +105,7 @@ const MainScrollableContent: React.FC = () => {
               </div>
               <div className="space-y-1">
                 <p className="text-[#1b190d] text-[10px] font-bold uppercase tracking-[0.4em]">Daughter of</p>
-                <p className="text-primary text-xl italic font-medium font-display">Mr. & Mrs. Perera</p>
+                <p className="text-primary text-xl italic font-medium font-display">Mr. & Mrs. Rasnayaka</p>
               </div>
             </div>
 
@@ -115,7 +115,7 @@ const MainScrollableContent: React.FC = () => {
               </div>
               <div className="space-y-1">
                 <p className="text-[#1b190d] text-[10px] font-bold uppercase tracking-[0.4em]">Son of</p>
-                <p className="text-primary text-xl italic font-medium font-display">Mr. & Mrs. Silva</p>
+                <p className="text-primary text-xl italic font-medium font-display">Mr. & Mrs. Ambagahawattage</p>
               </div>
             </div>
           </div>
