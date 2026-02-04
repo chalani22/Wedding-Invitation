@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Lakmini & Shalinda - Wedding Invitation</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ecc813",
+                        "background-light": "#fcfbf8",
+                        "background-dark": "#221f10",
+                        "blush": "#fff5f5",
+                        "ivory": "#fffff9",
+                        "gold-muted": "#9a8d4c"
+                    },
+                    fontFamily: {
+                        "display": ["Newsreader", "serif"]
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'draw': 'draw 2s ease-in-out forwards',
+                        'blur-to-sharp': 'blurSharp 2s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                        draw: { '0%': { 'stroke-dashoffset': '1000' }, '100%': { 'stroke-dashoffset': '0' } },
+                        blurSharp: { '0%': { filter: 'blur(10px)', opacity: '0' }, '100%': { filter: 'blur(0)', opacity: '1' } }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Newsreader', serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-color: #fcfbf8;
+        }
+        .arch-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+        .gold-dust {
+            background-image: radial-gradient(circle, #ecc813 0.5px, transparent 0.5px);
+            background-size: 60px 60px;
+        }
+        .scroll-smooth { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #ecc813; border-radius: 10px; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "@google/genai": "https://esm.sh/@google/genai@^1.39.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-background-light text-[#1b190d]">
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
